@@ -1,0 +1,19 @@
+version: "3.3"
+services:
+  ssh_centos:
+    container_name: ssh_centos
+    image: ssh_centos:1.4
+    build: 
+      context: ${HOME}/DockerData/dockerfile/centos
+      dockerfile: Dockerfile
+    #端口映射
+    ports:
+      - "8122:22"
+        #restart: always
+    #挂载文件
+    volumes:
+      - ${HOME}/DockerData/code/postgres:/mnt/postgres
+      - ${HOME}/DockerData/code/pgconfig:/mnt/config
+    command: bash -c "/usr/sbin/sshd -D"
+      #stdin_open: true
+    tty: true
