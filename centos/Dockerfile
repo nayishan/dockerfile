@@ -3,7 +3,7 @@ FROM centos
 ARG USER=root
 ARG PGCONFIG=/root/config
 ARG PREPGCODE=/root/gitCode
-ARG PGCODE=${PGCODE}/postgres
+ARG PGCODE=${PREPGCODE}/postgres
 ARG LOG=/root/log
 ARG RELEASE=/root/pgrelease
 ARG MNTCODE=/mnt/postgres
