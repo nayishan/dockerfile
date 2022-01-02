@@ -1,0 +1,27 @@
+version: "3.3"
+services:
+  ssh_ubuntu:
+    container_name: ssh_ubuntu
+    image: ssh_ubuntu
+    build: 
+      context: ${HOME}/DockerData/dockerfile/ubuntu
+      dockerfile: Dockerfile
+    networks:
+      mynetwork:
+        ipv4_address: "172.16.0.3"
+    #挂载文件
+    volumes:
+      - ${HOME}/DockerData/code/postgres:/mnt/postgres
+    command:
+      #- bash
+      #- -c
+      #- |
+        #"cd /root/config;bash initbashrc.sh"
+        #bash -c "mkdir /run/sshd && /usr/sbin/sshd -D"
+        bash -c "/usr/sbin/sshd -D"
+      #stdin_open: true
+    tty: true
+
+networks:
+  mynetwork:
+    external: true

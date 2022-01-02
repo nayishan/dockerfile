@@ -20,7 +20,8 @@ RUN set -ex \
     openssh-server \
     make \
     flex \
-    zlib \
+    zlib-dev \
+    openssl
 && echo root:111111 | chpasswd \
 && ssh-keygen -t rsa -P "" -f "/etc/ssh/ssh_host_rsa_key" \
 && ssh-keygen -t ecdsa -P "" -f "/etc/ssh/ssh_host_ecdsa_key" \

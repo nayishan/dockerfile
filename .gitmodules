@@ -1,0 +1,3 @@
+[submodule "docker-mac-net-work"]
+	path = docker-mac-net-work
+	url = https://github.com/wojas/docker-mac-network.git
