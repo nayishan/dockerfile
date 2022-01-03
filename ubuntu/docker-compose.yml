@@ -12,6 +12,7 @@ services:
     #挂载文件
     volumes:
       - ${HOME}/DockerData/code/postgres:/mnt/postgres
+      - ${HOME}/config/nvimdots:/mnt/nvim
     command:
       #- bash
       #- -c

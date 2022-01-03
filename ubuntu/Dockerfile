@@ -8,10 +8,14 @@ ARG LOG=/root/log
 ARG RELEASE=/root/pgrelease
 ARG MNTCODE=/mnt/postgres
 ARG DEBIAN_FRONTEND=noninteractive
+ARG MNTNVIM=/mnt/nvim
+ARG NVIM=/root/.config
 #ARG SSHD=/run/sshd
 COPY pgconfig ${PGCONFIG}
  
 RUN set -ex \
+#&&  export https_proxy=http://host.docker.internal:8118 \
+#&&  export http_proxy=http://host.docker.internal:8118 \
 &&  apt update -y \
 &&  apt install -y software-properties-common \
 &&  apt-add-repository ppa:neovim-ppa/unstable \
@@ -44,6 +48,11 @@ RUN set -ex \
     xsltproc \
     docbook-xsl \
     docbook-xml \ 
+    git \
+    lua5.1 \
+    libsqlite3-dev \
+    vim \
+    curl \
 && echo root:111111 | chpasswd \
 #&& ssh-keygen -t rsa -P "" -f "/etc/ssh/ssh_host_rsa_key" \
 #&& ssh-keygen -t ecdsa -P "" -f "/etc/ssh/ssh_host_ecdsa_key" \
@@ -51,9 +60,15 @@ RUN set -ex \
 && mkdir ${PREPGCODE} \
 #&& mkdir ${PGCONFIG} \
 && mkdir ${LOG} \
+&& mkdir -p ${NVIM} \
 && mkdir ${RELEASE} \
 && mkdir ${MNTCODE} \
+&& mkdir ${MNTNVIM} \
 && echo "PermitRootLogin yes" >> /etc/ssh/sshd_config \ 
 && ln -s ${MNTCODE} ${PGCODE} \
+&& ln -s ${MNTNVIM} ${NVIM} \
 && chmod +x ${PGCONFIG}/initbashrc.sh \
-&& /root/config/initbashrc.sh
+&& /root/config/initbashrc.sh \
+&&  echo "alias setproxy=\"export https_proxy=http://host.docker.internal:8118; export http_proxy=http://host.docker.internal:8118; export all_proxy=socks5://host.docker.internal:8119; echo 'Set proxy successfully'\"" >> /root/.bashrc \
+&& echo "export XDG_CONFIG_HOME=/root/.config" >>/root/.bashrc \
+&& echo "export XDG_DATA_HOME=/root/.config/nvim/data" >>/root/.bashrc
