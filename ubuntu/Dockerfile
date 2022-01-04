@@ -4,11 +4,12 @@ ARG USER=root
 ARG PGCONFIG=/root/config
 ARG PREPGCODE=/root/gitCode
 ARG PGCODE=${PREPGCODE}/postgres
+ARG ONECODE=/root/onethreadoneepoll
 ARG LOG=/root/log
 ARG RELEASE=/root/pgrelease
-ARG MNTCODE=/mnt/postgres
+ARG MNTCODE=/mnt/code
 ARG DEBIAN_FRONTEND=noninteractive
-ARG MNTNVIM=/mnt/nvim
+ARG MNTNVIM=/mnt/config
 ARG NVIM=/root/.config
 #ARG SSHD=/run/sshd
 COPY pgconfig ${PGCONFIG}
@@ -21,6 +22,7 @@ RUN set -ex \
 &&  apt-add-repository ppa:neovim-ppa/unstable \
 &&  apt update -y \
 &&  apt install -y neovim \ 
+    locales-all \
     libterm-readkey-perl \
     dialog \
     apt-utils \
@@ -53,6 +55,11 @@ RUN set -ex \
     libsqlite3-dev \
     vim \
     curl \
+    zip \
+    automake \
+    autoconf \
+    libtool \
+    clang \
 && echo root:111111 | chpasswd \
 #&& ssh-keygen -t rsa -P "" -f "/etc/ssh/ssh_host_rsa_key" \
 #&& ssh-keygen -t ecdsa -P "" -f "/etc/ssh/ssh_host_ecdsa_key" \
@@ -65,10 +72,11 @@ RUN set -ex \
 && mkdir ${MNTCODE} \
 && mkdir ${MNTNVIM} \
 && echo "PermitRootLogin yes" >> /etc/ssh/sshd_config \ 
-&& ln -s ${MNTCODE} ${PGCODE} \
-&& ln -s ${MNTNVIM} ${NVIM} \
+&& ln -s ${MNTCODE}/postgres ${PREPGCODE}/postgres \
+&& ln -s ${MNTNVIM}/nvimdots ${NVIM}/nvim \
+&& ln -s ${MNTCODE}/onethreadoneepoll ${ONECODE} \
 && chmod +x ${PGCONFIG}/initbashrc.sh \
 && /root/config/initbashrc.sh \
-&&  echo "alias setproxy=\"export https_proxy=http://host.docker.internal:8118; export http_proxy=http://host.docker.internal:8118; export all_proxy=socks5://host.docker.internal:8119; echo 'Set proxy successfully'\"" >> /root/.bashrc \
-&& echo "export XDG_CONFIG_HOME=/root/.config" >>/root/.bashrc \
-&& echo "export XDG_DATA_HOME=/root/.config/nvim/data" >>/root/.bashrc
+&&  echo "alias setproxy=\"export https_proxy=http://host.docker.internal:8118; export http_proxy=http://host.docker.internal:8118; export all_proxy=socks5://host.docker.internal:8119; echo 'Set proxy successfully'\"" >> /root/.bashrc 
+#&& echo "export XDG_CONFIG_HOME=/root/.config" >>/root/.bashrc \
+#&& echo "export XDG_DATA_HOME=/root/.config/nvim/data" >>/root/.bashrc
