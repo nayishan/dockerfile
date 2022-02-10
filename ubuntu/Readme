@@ -1,0 +1,1 @@
+sudo vim /etc/sysctl.d/10-ptrace.conf #1->0

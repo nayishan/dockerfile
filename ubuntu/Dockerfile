@@ -60,6 +60,10 @@ RUN set -ex \
     autoconf \
     libtool \
     clang \
+    clangd-10 \
+    libncurses5-dev \
+    texinfo \
+    cgdb \
 && echo root:111111 | chpasswd \
 #&& ssh-keygen -t rsa -P "" -f "/etc/ssh/ssh_host_rsa_key" \
 #&& ssh-keygen -t ecdsa -P "" -f "/etc/ssh/ssh_host_ecdsa_key" \
@@ -73,10 +77,13 @@ RUN set -ex \
 && mkdir ${MNTNVIM} \
 && echo "PermitRootLogin yes" >> /etc/ssh/sshd_config \ 
 && ln -s ${MNTCODE}/postgres ${PREPGCODE}/postgres \
-&& ln -s ${MNTNVIM}/nvimdots ${NVIM}/nvim \
+&& ln -s ${MNTNVIM}/mynvim ${NVIM}/nvim \
 && ln -s ${MNTCODE}/onethreadoneepoll ${ONECODE} \
+&& ln -s /usr/bin/clangd-10 /usr/bin/clangd \
 && chmod +x ${PGCONFIG}/initbashrc.sh \
 && /root/config/initbashrc.sh \
 &&  echo "alias setproxy=\"export https_proxy=http://host.docker.internal:8118; export http_proxy=http://host.docker.internal:8118; export all_proxy=socks5://host.docker.internal:8119; echo 'Set proxy successfully'\"" >> /root/.bashrc 
+&& curl -LO https://github.com/BurntSushi/ripgrep/releases/download/13.0.0/ripgrep_13.0.0_amd64.deb \
+&& dpkg -i ripgrep_13.0.0_amd64.deb
 #&& echo "export XDG_CONFIG_HOME=/root/.config" >>/root/.bashrc \
 #&& echo "export XDG_DATA_HOME=/root/.config/nvim/data" >>/root/.bashrc
